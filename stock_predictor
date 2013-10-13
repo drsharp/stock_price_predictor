@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+$:.unshift File.dirname(__FILE__)
+require 'lib/fibonacci_calculator'
+require 'lib/stock_price_predictor'
+
+
+puts "Dan's Custom Stock Predictor!\n\n"
+
+print "Enter the high stock price......: "
+high = gets.chomp
+
+print "Enter the low stock price.......: "
+low = gets.chomp
+
+print "Enter the iteration count.......: "
+factor = gets.chomp
+
+print "Do you want to use floats? (Y/N): "
+floats = gets.chomp.downcase == 'y'
+
+puts "\nData entered: $#{high} -> $#{low} via #{factor} iterations"
+
+
+first = StockPricePredictor.new(
+    FibonacciCalculator.new, high.to_i, low.to_i, factor.to_i, 1, floats
+  )
+
+puts "\t1st Retracement Target: $#{first.predicted_price} (+/- $#{first.deviation})"
+
+second = StockPricePredictor.new(
+    FibonacciCalculator.new, high.to_i, low.to_i, factor.to_i, 2, floats
+  )
+
+puts "\t2nd Retracement Target: $#{second.predicted_price} (+/- $#{second.deviation})"
+
+third = StockPricePredictor.new(
+    FibonacciCalculator.new, high.to_i, low.to_i, factor.to_i, 3, floats
+  )
+
+puts "\t3rd Retracement Target: $#{third.predicted_price} (+/- $#{third.deviation})"
+
+price_average = ((first.predicted_price + second.predicted_price) / 2).round(2)
+deviation_average = ((first.deviation + second.deviation) / 2).round(2)
+price_average = price_average.to_i unless floats
+deviation_average = deviation_average.to_i unless floats
+
+puts "\t1st & 2nd Retracement Ave: $#{price_average} (+/- $#{deviation_average})"
